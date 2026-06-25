@@ -10,8 +10,10 @@ android {
         applicationId "com.example.screentool"
         minSdk 19
         targetSdk 34
+        versionCode 1
+        versionName "1.0"
     }
-    
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
@@ -19,5 +21,6 @@ android {
 }
 
 dependencies {
+    // בסיס בלבד, ללא ספריות קוטלין
     implementation 'androidx.appcompat:appcompat:1.6.1'
-} 
+}
