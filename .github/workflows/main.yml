@@ -18,14 +18,13 @@ jobs:
         java-version: '17'
         distribution: 'zulu'
 
-    - name: Setup Gradle
-      run: |
-        gradle wrapper --gradle-version 8.5
-        chmod +x gradlew
+    # כאן אנחנו בודקים אם התיקיות בכלל קיימות לפני שאנחנו בונים
+    - name: List Files
+      run: ls -R
 
-    # הפקודה הזו תדפיס ללוג כל שלב בתהליך, כולל השגיאה האמיתית
+    # בונים בלי --debug ובלי לוגים עודפים, רק בסיס
     - name: Build Debug APK
-      run: ./gradlew assembleDebug --no-daemon --debug
+      run: ./gradlew assembleDebug --no-daemon
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
