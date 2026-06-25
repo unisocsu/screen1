@@ -18,10 +18,14 @@ jobs:
         java-version: '17'
         distribution: 'zulu'
 
-    # אנחנו משתמשים בפקודת 'gradle' במקום './gradlew'
-    # זה מונע את השגיאה של 'No such file or directory'
+    # זה השלב שפותר את הכל: מוודא שה-wrapper קיים וניתן להרצה
+    - name: Prepare Gradle
+      run: |
+        gradle wrapper --gradle-version 8.5
+        chmod +x gradlew
+
     - name: Build Debug APK
-      run: gradle clean assembleDebug --no-daemon
+      run: ./gradlew clean assembleDebug --no-daemon
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
