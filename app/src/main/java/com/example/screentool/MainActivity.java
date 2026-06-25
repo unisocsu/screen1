@@ -7,7 +7,6 @@ import android.os.Environment;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-import java.io.File;
 import java.io.OutputStream;
 
 public class MainActivity extends Activity {
@@ -21,7 +20,7 @@ public class MainActivity extends Activity {
         LinearLayout layout = new LinearLayout(this);
         layout.setOrientation(LinearLayout.VERTICAL);
         Button btn = new Button(this);
-        btn.setText("צלם מסך וצא אוטומטית");
+        btn.setText("צלם מסך וצא");
         
         btn.setOnClickListener(v -> takeScreenshotAndMinimize());
 
@@ -30,7 +29,6 @@ public class MainActivity extends Activity {
     }
 
     private void takeScreenshotAndMinimize() {
-        // 1. חזרה למסך הבית באופן אוטומטי
         Intent intent = new Intent(Intent.ACTION_MAIN);
         intent.addCategory(Intent.CATEGORY_HOME);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -38,10 +36,9 @@ public class MainActivity extends Activity {
 
         Toast.makeText(this, "מצלם ברקע...", Toast.LENGTH_SHORT).show();
 
-        // 2. צילום אחרי השהיה קצרה (כדי לתת למערכת זמן להתרנדר)
         new Thread(() -> {
             try {
-                Thread.sleep(1000); // שניה אחת מספיקה כי יצאנו מהאפליקציה
+                Thread.sleep(1000); 
 
                 String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) 
                               + "/screenshot_" + System.currentTimeMillis() + ".png";
@@ -54,7 +51,7 @@ public class MainActivity extends Activity {
                 os.close();
                 process.waitFor();
 
-                runOnUiThread(() -> Toast.makeText(this, "המסך צולם ונשמר!", Toast.LENGTH_LONG).show());
+                runOnUiThread(() -> Toast.makeText(this, "המסך צולם!", Toast.LENGTH_SHORT).show());
             } catch (Exception e) {
                 runOnUiThread(() -> Toast.makeText(this, "שגיאה! וודא שיש ROOT", Toast.LENGTH_LONG).show());
             }
