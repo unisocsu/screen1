@@ -18,6 +18,13 @@ jobs:
         java-version: '17'
         distribution: 'zulu'
 
+    # זה השלב הקריטי - יצירת ה-Wrapper ומתן הרשאות לפני הריצה
+    - name: Setup Gradle Wrapper
+      run: |
+        gradle wrapper --gradle-version 8.5
+        chmod +x gradlew
+
+    # עכשיו ה-gradlew קיים בוודאות
     - name: Build Debug APK
       run: ./gradlew clean assembleDebug --no-daemon
 
