@@ -18,13 +18,10 @@ jobs:
         java-version: '17'
         distribution: 'zulu'
 
-    # כאן אנחנו בודקים אם התיקיות בכלל קיימות לפני שאנחנו בונים
-    - name: List Files
-      run: ls -R
-
-    # בונים בלי --debug ובלי לוגים עודפים, רק בסיס
+    # אנחנו משתמשים בפקודת 'gradle' במקום './gradlew'
+    # זה מונע את השגיאה של 'No such file or directory'
     - name: Build Debug APK
-      run: ./gradlew assembleDebug --no-daemon
+      run: gradle clean assembleDebug --no-daemon
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
