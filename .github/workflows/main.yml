@@ -18,15 +18,14 @@ jobs:
         java-version: '17'
         distribution: 'zulu'
 
-    # זה השלב הקריטי - יצירת ה-Wrapper ומתן הרשאות לפני הריצה
-    - name: Setup Gradle Wrapper
+    - name: Setup Gradle
       run: |
         gradle wrapper --gradle-version 8.5
         chmod +x gradlew
 
-    # עכשיו ה-gradlew קיים בוודאות
+    # הפקודה הזו תדפיס ללוג כל שלב בתהליך, כולל השגיאה האמיתית
     - name: Build Debug APK
-      run: ./gradlew clean assembleDebug --no-daemon
+      run: ./gradlew assembleDebug --no-daemon --debug
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
