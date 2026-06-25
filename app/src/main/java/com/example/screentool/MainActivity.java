@@ -1,31 +1,27 @@
 package com.example.screentool;
 
 import android.app.Activity;
-import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 import java.io.File;
-import android.os.Environment;
+import java.io.OutputStream;
 
 public class MainActivity extends Activity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+
         Button btn = new Button(this);
-        btn.setText("צלם מסך");
+        btn.setText("צלם מסך (ROOT)");
         
-        btn.setOnClickListener(v -> {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-                // אנדרואיד ישן: נשתמש ב-ROOT
-                takeScreenshotWithRoot();
-            } else {
-                // אנדרואיד חדש: כאן תממש בעתיד את ה-MediaProjection
-                Toast.makeText(this, "לגרסאות חדשות נדרש MediaProjection", Toast.LENGTH_LONG).show();
-            }
-        });
+        btn.setOnClickListener(v -> takeScreenshotWithRoot());
 
         layout.addView(btn);
         setContentView(layout);
@@ -33,17 +29,23 @@ public class MainActivity extends Activity {
 
     private void takeScreenshotWithRoot() {
         try {
+            // הגדרת נתיב לשמירת התמונה
             String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) 
                           + "/screenshot_" + System.currentTimeMillis() + ".png";
-            Process sh = Runtime.getRuntime().exec("su", null, null);
-            java.io.OutputStream os = sh.getOutputStream();
+            
+            // הרצת פקודת הצילום של אנדרואיד דרך ROOT
+            Process process = Runtime.getRuntime().exec("su");
+            OutputStream os = process.getOutputStream();
             os.write(("/system/bin/screencap -p " + path + "\n").getBytes());
+            os.write("exit\n".getBytes());
             os.flush();
             os.close();
-            sh.waitFor();
-            Toast.makeText(this, "צולם בהצלחה!", Toast.LENGTH_SHORT).show();
+            
+            process.waitFor();
+            Toast.makeText(this, "המסך צולם ונשמר בגלריה", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
-            Toast.makeText(this, "שגיאה: אין הרשאות ROOT", Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+            Toast.makeText(this, "שגיאה: דרוש ROOT!", Toast.LENGTH_LONG).show();
         }
     }
 }
