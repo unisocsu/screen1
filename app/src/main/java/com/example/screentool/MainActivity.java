@@ -29,12 +29,11 @@ public class MainActivity extends Activity {
     }
 
     private void takeScreenshotAndMinimize() {
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
+        // התיקון המרכזי: שולח את האפליקציה הנוכחית לרקע
+        // זה מחזיר את המשתמש אוטומטית בדיוק למסך האחרון שבו הוא היה
+        moveTaskToBack(true);
 
-        Toast.makeText(this, "מצלם ברקע...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "מצלם ברקע...", Toast.LENGTH_SHORT).show();
 
         new Thread(() -> {
             try {
@@ -51,9 +50,10 @@ public class MainActivity extends Activity {
                 os.close();
                 process.waitFor();
 
-                runOnUiThread(() -> Toast.makeText(this, "המסך צולם!", Toast.LENGTH_SHORT).show());
+                // שימוש ב-getApplicationContext מבטיח שהטקסט יקפוץ גם כשהאפליקציה ממוזערת
+                runOnUiThread(() -> Toast.makeText(getApplicationContext(), "המסך צולם!", Toast.LENGTH_SHORT).show());
             } catch (Exception e) {
-                runOnUiThread(() -> Toast.makeText(this, "שגיאה! וודא שיש ROOT", Toast.LENGTH_LONG).show());
+                runOnUiThread(() -> Toast.makeText(getApplicationContext(), "שגיאה! וודא שיש ROOT", Toast.LENGTH_LONG).show());
             }
         }).start();
     }
